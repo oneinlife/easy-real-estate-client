@@ -38,7 +38,22 @@ const loaders = [
   {
     test: /\.jsx?$/,
     loader: 'babel-loader',
-    exclude: /node_modules/
+    exclude: /node_modules/,
+    presets: [
+      [
+        '@babel/preset-env',
+        {
+          loose: true,
+          modules: false,
+          useBuiltIns: 'usage',
+          corejs: 3,
+          targets: {
+            esmodules: true,
+          },
+        }
+      ],
+      '@babel/react',
+    ],
   },
   { test: /\.woff(\?.*)?$/, loader: 'url-loader?prefix=fonts/&name=[path][name].[ext]&limit=10000&mimetype=application/font-woff' },
   { test: /\.woff2(\?.*)?$/, loader: 'url-loader?prefix=fonts/&name=[path][name].[ext]&limit=10000&mimetype=application/font-woff2' },
@@ -139,7 +154,7 @@ if (__DEV__) {
       allChunks: true
     }),
     new CopyWebpackPlugin([
-      {from: root('./static'), to: 'static'}
+      { from: root('./static'), to: 'static' }
     ])
   );
 }
