@@ -1,4 +1,4 @@
-import React from 'react';
+import preact from 'preact';
 import style from 'styles/home-layout.less';
 import { Link } from 'react-router';
 

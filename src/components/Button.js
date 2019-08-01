@@ -1,4 +1,4 @@
-import React from 'react';
+import preact, { h } from 'preact';
 import style from 'styles/button.less';
 import classNames from 'classnames';
 

@@ -1,9 +1,8 @@
-import path from 'path';
-import cssnano from 'cssnano';
-import webpack from 'webpack';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+const path = require('path');
+const cssnano = require('cssnano');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 
 const __DEV__ = process.env.NODE_ENV === 'development';
 
@@ -16,11 +15,11 @@ const entry = {
 };
 
 const resolve = {
-  extensions: ['', '.js', '.jsx'],
-  root: root('./src'),
+  extensions: ['.js', '.jsx'],
+  modules: [path.resolve(__dirname, '../src'), 'node_modules'],
   alias: {
-    'react': 'preact-compat/dist/preact-compat.js',
-    'react-dom': 'preact-compat/dist/preact-compat.js'
+    components: path.resolve(__dirname, './src/components'),
+    layouts: path.resolve(__dirname, './src/layouts'),
   }
 };
 
@@ -36,23 +35,12 @@ const baseCssLoader =
 
 const loaders = [
   {
-    test: /\.jsx?$/,
+    test: /\.m?jsx?$/,
     loader: 'babel-loader',
-    exclude: /node_modules/,
-    presets: [
-      [
-        '@babel/preset-env',
-        {
-          loose: true,
-          modules: false,
-          useBuiltIns: 'usage',
-          corejs: 3,
-          targets: {
-            esmodules: true,
-          },
-        }
-      ],
-      '@babel/react',
+    exclude: [
+      /core-js/,
+      /regenerator-runtime/,
+      /node_modules/,
     ],
   },
   { test: /\.woff(\?.*)?$/, loader: 'url-loader?prefix=fonts/&name=[path][name].[ext]&limit=10000&mimetype=application/font-woff' },
@@ -91,82 +79,54 @@ const plugins = [
     filename: root('./dist/index.html'),
     title: 'Preact Starter',
     inject: 'body'
+  }),
+  new ScriptExtHtmlWebpackPlugin({
+    module: /\.js$/
   })
 ];
 
 if (__DEV__) {
   entry.app.unshift(root('./build/dev-client.js'));
 
-  loaders.push(
-    {
-      test: /\.css$/,
-      loader: 'style-loader!' + baseCssLoader + '!postcss-loader',
-      exclude: null
-    },
-    {
-      test: /\.less$/,
-      loader: 'style-loader!' + baseCssLoader + '!less-loader!postcss-loader',
-      exclude: null
-    }
-  );
-
+/*
   plugins.push(
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
+    //new webpack.HotModuleReplacementPlugin(),
+    //new webpack.NoErrorsPlugin()
   );
+  */
 } else {
   devtool = 'source-map';
 
   entry.vendor = [
     'preact',
-    'preact-compat/dist/preact-compat.js',
     'react-router',
     'mobx',
-    'mobx-react'
+    'mobx-preact'
   ];
-
-  loaders.push(
-    {
-      test: /\.css$/,
-      loader: ExtractTextPlugin.extract('style-loader', baseCssLoader + '!postcss-loader'),
-      exclude: null
-    },
-    {
-      test: /\.less$/,
-      loader: ExtractTextPlugin.extract('style-loader', baseCssLoader + '!less-loader!postcss-loader'),
-      exclude: null
-    }
-  );
 
   plugins.push(
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin({
+    /*new webpack.optimize.UglifyJsPlugin({
       compress: {
         unused: true,
         dead_code: true,
         warnings: false
       }
-    }),
+    }),*/
     new webpack.optimize.CommonsChunkPlugin({
       names: ['vendor']
     }),
-    new ExtractTextPlugin('[name].[contenthash].css', {
-      allChunks: true
-    }),
-    new CopyWebpackPlugin([
-      { from: root('./static'), to: 'static' }
-    ])
+
   );
 }
 
-export default {
+module.exports = {
   devtool,
   entry,
   resolve,
   output,
   module: {
-    loaders
+    rules: loaders
   },
   plugins,
-  postcss
 };

@@ -1,9 +1,9 @@
-import path from 'path';
-import express from 'express';
-import webpack from 'webpack';
-import config from '../config';
+const path = require('path');
+const express = require('express');
+const webpack = require('webpack');
+const config = require('../config');
 // var proxyMiddleware = require('http-proxy-middleware');
-import webpackConfig from '../webpack.config.babel';
+const webpackConfig = require('../webpack.config.babel');
 
 // default port where dev server listens for incoming traffic
 const port = process.env.PORT || config.dev.port || 8080;

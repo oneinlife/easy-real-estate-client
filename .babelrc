@@ -1,4 +1,22 @@
 {
-  "presets": ["es2015", "react"],
-  "plugins": ["transform-runtime", "transform-decorators-legacy", "transform-class-properties"]
+  "presets": [
+    [
+      "@babel/env",
+      {
+        "loose": true,
+        "modules": false,
+        "useBuiltIns": "usage",
+        "corejs": 3,
+        "targets": {
+          "esmodules": true,
+        },
+      }
+    ],
+  ],
+  "plugins": [
+    "add-module-exports",
+    ["@babel/plugin-proposal-decorators", {"decoratorsBeforeExport": true}],
+    "@babel/plugin-proposal-class-properties",
+    ["@babel/plugin-transform-react-jsx", { "pragma":"h" }]
+  ]
 }

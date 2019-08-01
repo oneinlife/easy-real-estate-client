@@ -1,11 +1,11 @@
-import React from 'react';
-import { observer, inject } from 'mobx-react';
+import {h, Component} from 'preact';
+import { observer, inject } from 'mobx-preact';
 import Deliver from 'components/Deliver';
 import Button from 'components/Button';
 
 @inject('countStore')
 @observer
-class Count extends React.Component {
+class Count extends Component {
   render () {
     const {countStore} = this.props;
     const {increasing, count, increase, doubleAsync, reset} = countStore;

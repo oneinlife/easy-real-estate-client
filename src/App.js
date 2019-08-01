@@ -1,4 +1,4 @@
-import React from 'react';
+import preact from 'preact';
 import { Router, hashHistory } from 'react-router';
 import routes from './routes';
 
