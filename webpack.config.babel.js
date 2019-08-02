@@ -7,7 +7,7 @@ const MinifyPlugin = require("babel-minify-webpack-plugin");
 
 const __DEV__ = process.env.NODE_ENV === 'development';
 
-let devtool = 'cheap-module-eval-source-map';
+
 
 const root = (_path = '.') => path.join(__dirname, _path);
 
@@ -112,8 +112,6 @@ if (__DEV__) {
     );
     */
 } else {
-  devtool = 'source-map';
-
   entry.vendor = [
     'preact',
     'mobx',
@@ -128,7 +126,7 @@ if (__DEV__) {
 
 module.exports = {
   mode: __DEV__ ? 'development' : 'production',
-  devtool,
+  devtool: __DEV__ ? 'cheap-module-eval-source-map' : 'source-map',
   entry,
   resolve,
   output,
