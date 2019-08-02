@@ -1,6 +1,6 @@
-import preact from 'preact';
-import style from 'styles/home-layout.less';
-import { Link } from 'react-router';
+import { h } from 'preact';
+import style from 'styles/home-layout.scss';
+import { Link } from 'preact-router';
 
 function HomeLayout ({children}) {
   return (
@@ -8,8 +8,8 @@ function HomeLayout ({children}) {
       <header><img src="/static/preact.svg"/></header>
       <main>
         <div className={style.tabs}>
-          <Link to="/" onlyActiveOnIndex activeClassName={style.active}>Counter</Link>
-          <Link to="/about" activeClassName={style.active}>About</Link>
+          <Link href="/count" onlyActiveOnIndex activeClassName={style.active}>Counter</Link>
+          <Link href="/about" activeClassName={style.active}>About</Link>
         </div>
         {children}
       </main>

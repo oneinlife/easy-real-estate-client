@@ -2,16 +2,15 @@ import {h, render} from 'preact';
 import App from './App';
 import store from './store';
 import { Provider } from 'mobx-preact';
-import 'styles/core.less';
 import DevTools from 'mobx-preact-devtools';
 
 if (__DEV__) {
-  require('preact/devtools');
+  /*require('preact/devtools');
 
   const devToolsRoot = document.createElement('div');
   devToolsRoot.id = 'devtools';
   document.body.appendChild(devToolsRoot);
-  render(<DevTools />, devToolsRoot);
+  render(<DevTools />, devToolsRoot);*/
 }
 
 let root = null;

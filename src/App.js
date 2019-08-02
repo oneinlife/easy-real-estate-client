@@ -1,10 +1,20 @@
-import preact from 'preact';
-import { Router, hashHistory } from 'react-router';
-import routes from './routes';
+import { h } from 'preact';
+import { Router } from 'preact-router';
+import Header from 'layouts/Header';
+import HomeLayout from 'layouts/HomeLayout';
+import About from 'layouts/About';
+import Count from 'layouts/Count';
 
-function App () {
+function App() {
   return (
-    <Router history={hashHistory} routes={routes} />
+    <div>
+      <Header />
+      <Router>
+        <HomeLayout path='/' />
+        <About path='/about' />
+        <Count path='/count' />
+      </Router>
+    </div>
   );
 }
 

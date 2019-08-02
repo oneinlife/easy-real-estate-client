@@ -1,7 +1,7 @@
 import {h, Component} from 'preact';
 import { observer, inject } from 'mobx-preact';
-import Deliver from 'components/Deliver';
-import Button from 'components/Button';
+import Deliver from 'components/Deliver/Deliver';
+import Button from 'components/Button/Button';
 
 @inject('countStore')
 @observer

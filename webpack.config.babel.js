@@ -3,16 +3,7 @@ const cssnano = require('cssnano');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
-const AUTOPREFIXER_BROWSERS = [
-  'Android 2.3',
-  'Android >= 4',
-  'Chrome >= 35',
-  'Firefox >= 31',
-  'Explorer >= 9',
-  'iOS >= 7',
-  'Opera >= 12',
-  'Safari >= 7.1',
-];
+const MinifyPlugin = require("babel-minify-webpack-plugin");
 
 const __DEV__ = process.env.NODE_ENV === 'development';
 
@@ -21,7 +12,7 @@ let devtool = 'cheap-module-eval-source-map';
 const root = (_path = '.') => path.join(__dirname, _path);
 
 const entry = {
-  app: [root('./src/index.js')]
+  app: root('./src/index.js')
 };
 
 const resolve = {
@@ -30,6 +21,7 @@ const resolve = {
   alias: {
     components: path.resolve(__dirname, './src/components'),
     layouts: path.resolve(__dirname, './src/layouts'),
+    styles: path.resolve(__dirname, './src/styles'),
   }
 };
 
@@ -44,11 +36,6 @@ const cssLoaderOptions = DEBUG => ({
   sourceMap: DEBUG,
   // CSS Modules https://github.com/css-modules/css-modules
   modules: true,
-  localIdentName: DEBUG ?
-    '[name]_[local]_[hash:base64:3]' : '[hash:base64:4]',
-  // CSS Nano http://cssnano.co/options/
-  minimize: !DEBUG,
-  autoprefixer: false,
 });
 
 const postCssLoaderOptions = {
@@ -63,7 +50,6 @@ const postCssLoaderOptions = {
     // PostCSS plugin for sass-like mixins
     // https://github.com/postcss/postcss-mixins
     require('postcss-mixins')(),
-    require('autoprefixer')({ browsers: AUTOPREFIXER_BROWSERS }),
   ],
 };
 
@@ -71,7 +57,7 @@ const loaders = [
   {
     test: /\.m?jsx?$/,
     loader: 'babel-loader',
-    include: [path.resolve(__dirname, '../src')],
+   // include: [path.resolve(__dirname, '../src')],
     exclude: [
       /core-js/,
       /regenerator-runtime/,
@@ -136,21 +122,12 @@ if (__DEV__) {
 
   plugins.push(
     new webpack.optimize.OccurrenceOrderPlugin(),
-    /*new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        unused: true,
-        dead_code: true,
-        warnings: false
-      }
-    }),*/
-    new webpack.optimize.CommonsChunkPlugin({
-      names: ['vendor']
-    }),
-
+    new MinifyPlugin()
   );
 }
 
 module.exports = {
+  mode: __DEV__ ? 'development' : 'production',
   devtool,
   entry,
   resolve,
@@ -159,4 +136,5 @@ module.exports = {
     rules: loaders
   },
   plugins,
+  target: 'web',
 };
