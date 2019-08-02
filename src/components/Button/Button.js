@@ -1,5 +1,5 @@
-import preact, { h } from 'preact';
-import style from 'styles/button.less';
+import preact from 'preact';
+import style from 'button.scss';
 import classNames from 'classnames';
 
 function Button ({

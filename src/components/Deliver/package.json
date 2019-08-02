@@ -1,0 +1,6 @@
+{
+  "name": "Deliver",
+  "version": "0.0.1",
+  "private": true,
+  "main": "./Deliver.js"
+}

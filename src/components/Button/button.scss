@@ -1,17 +1,16 @@
-@btnColor: #673ab8;
 .button {
   outline: none;
-  background-color: @btnColor;
+  background-color: #673ab8;
   transition: all ease-out .2s;
   border: 0;
   color: #fff;
   cursor: pointer;
   padding: 6px 12px;
   &:hover {
-    background-color: lighten(@btnColor, 20%);
+    background-color: lighten(#673ab8, 20%);
   }
   &.disabled {
     cursor: not-allowed;
-    background-color: lighten(@btnColor, 40%);
+    background-color: lighten(#673ab8, 40%);
   }
 }
