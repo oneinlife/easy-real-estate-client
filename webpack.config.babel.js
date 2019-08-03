@@ -4,6 +4,8 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const MinifyPlugin = require("babel-minify-webpack-plugin");
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+
 
 const __DEV__ = process.env.NODE_ENV === 'development';
 
@@ -11,9 +13,11 @@ const __DEV__ = process.env.NODE_ENV === 'development';
 
 const root = (_path = '.') => path.join(__dirname, _path);
 
-const entry = {
-  app: root('./src/index.js')
-};
+const entry = [
+  'core-js/modules/es.promise',
+  'core-js/modules/es.array.iterator',
+  './src/index.js',
+];
 
 const resolve = {
   extensions: ['.js', '.jsx'],
@@ -32,18 +36,7 @@ const output = {
   publicPath: '/'
 };
 
-const optimization = {
-  splitChunks: {
-    cacheGroups: {
-      vendor: {
-        chunks: 'initial',
-        name: 'vendor',
-        test: /node_modules/,
-        enforce: true
-      },
-    }
-  },
-};
+
 
 const cssLoaderOptions = DEBUG => ({
   importLoaders: 1,
@@ -71,11 +64,10 @@ const loaders = [
   {
     test: /\.m?jsx?$/,
     loader: 'babel-loader',
-   // include: [path.resolve(__dirname, '../src')],
+    // include: [path.resolve(__dirname, '../src')],
     exclude: [
       /core-js/,
       /regenerator-runtime/,
-      /node_modules/,
     ],
   },
   {
@@ -117,6 +109,10 @@ const plugins = [
 ];
 
 if (__DEV__) {
+  /*plugins.push(
+    new BundleAnalyzerPlugin()
+  );
+  */
   //entry.app.unshift(root('./build/dev-client.js'));
 
   /*
@@ -139,7 +135,6 @@ module.exports = {
   entry,
   resolve,
   output,
-  optimization,
   module: {
     rules: loaders
   },
