@@ -5,6 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const MinifyPlugin = require("babel-minify-webpack-plugin");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const resolver = require('postcss-import-alias-resolver');
 
 
 const __DEV__ = process.env.NODE_ENV === 'development';
@@ -49,7 +50,9 @@ const postCssLoaderOptions = {
   parser: 'postcss-scss',
   modules: true,
   plugins: () => [
-    require('postcss-import')(),
+    require('postcss-import')({resolve: resolver({
+      alias: { styles: path.resolve(__dirname, 'src/styles')}
+    })}),
     require('precss')(),
     // Generate pixel fallback for "rem" units, e.g. div { margin: 2.5rem 2px 3em 100%; }
     // https://github.com/robwierzbowski/node-pixrem
@@ -101,7 +104,8 @@ const plugins = [
     template: root('./src/index.ejs'),
     filename: root('./dist/index.html'),
     title: 'Preact Starter',
-    inject: 'body'
+    inject: 'body',
+    hash:true,
   }),
   new ScriptExtHtmlWebpackPlugin({
     module: /\.js$/
