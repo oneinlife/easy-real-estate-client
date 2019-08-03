@@ -9,7 +9,7 @@ module.exports = {
     assetsPublicPath: '/',
   },
   dev: {
-    port: 3000,
+    port: 8080,
     proxyTable: {}
   }
 };
