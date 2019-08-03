@@ -1,4 +1,4 @@
-import React from 'react';
+import preact, { h } from 'preact';
 
 function Deliver (props) {
   const {width, height, vertical = false} = props;

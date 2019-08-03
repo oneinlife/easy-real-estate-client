@@ -1,19 +1,18 @@
-import React from 'react';
-import style from 'styles/button.less';
-import classNames from 'classnames';
+import { h } from 'preact';
+//import style from 'button.scss';
+//import classNames from 'classnames';
 
 function Button ({
   disable = false,
   children,
   onClick
 }) {
-  const className = classNames(
+  /*const className = classNames(
     style.button,
     disable && style.disabled
-  );
+  );*/
   return (
     <button
-      className={className}
       onClick={onClick}
     >
       {children}

@@ -1,26 +1,27 @@
-import path from 'path';
-import cssnano from 'cssnano';
-import webpack from 'webpack';
-import ExtractTextPlugin from 'extract-text-webpack-plugin';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+const path = require('path');
+const cssnano = require('cssnano');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
+const MinifyPlugin = require("babel-minify-webpack-plugin");
 
 const __DEV__ = process.env.NODE_ENV === 'development';
 
-let devtool = 'cheap-module-eval-source-map';
+
 
 const root = (_path = '.') => path.join(__dirname, _path);
 
 const entry = {
-  app: [root('./src/index.js')]
+  app: root('./src/index.js')
 };
 
 const resolve = {
-  extensions: ['', '.js', '.jsx'],
-  root: root('./src'),
+  extensions: ['.js', '.jsx'],
+  modules: [path.resolve(__dirname, '../src'), 'node_modules'],
   alias: {
-    'react': 'preact-compat/dist/preact-compat.js',
-    'react-dom': 'preact-compat/dist/preact-compat.js'
+    components: path.resolve(__dirname, './src/components'),
+    layouts: path.resolve(__dirname, './src/layouts'),
+    styles: path.resolve(__dirname, './src/styles'),
   }
 };
 
@@ -30,15 +31,52 @@ const output = {
   publicPath: '/'
 };
 
-const baseCssLoader =
-  'css-loader?sourceMap&-minimize&' +
-  'modules&importLoaders=1&localIdentName=[name]_[local]_[hash:base64:5]';
+const cssLoaderOptions = DEBUG => ({
+  importLoaders: 1,
+  sourceMap: DEBUG,
+  // CSS Modules https://github.com/css-modules/css-modules
+  modules: true,
+});
+
+const postCssLoaderOptions = {
+  parser: 'postcss-scss',
+  modules: true,
+  plugins: () => [
+    require('postcss-import')(),
+    require('precss')(),
+    // Generate pixel fallback for "rem" units, e.g. div { margin: 2.5rem 2px 3em 100%; }
+    // https://github.com/robwierzbowski/node-pixrem
+    require('pixrem')(),
+    // PostCSS plugin for sass-like mixins
+    // https://github.com/postcss/postcss-mixins
+    require('postcss-mixins')(),
+  ],
+};
 
 const loaders = [
   {
-    test: /\.jsx?$/,
+    test: /\.m?jsx?$/,
     loader: 'babel-loader',
-    exclude: /node_modules/
+   // include: [path.resolve(__dirname, '../src')],
+    exclude: [
+      /core-js/,
+      /regenerator-runtime/,
+      /node_modules/,
+    ],
+  },
+  {
+    test: /\.scss$/,
+    use: [
+      { loader: 'isomorphic-style-loader' },
+      {
+        loader: 'css-loader',
+        options: cssLoaderOptions(__DEV__),
+      },
+      {
+        loader: 'postcss-loader',
+        options: postCssLoaderOptions,
+      },
+    ],
   },
   { test: /\.woff(\?.*)?$/, loader: 'url-loader?prefix=fonts/&name=[path][name].[ext]&limit=10000&mimetype=application/font-woff' },
   { test: /\.woff2(\?.*)?$/, loader: 'url-loader?prefix=fonts/&name=[path][name].[ext]&limit=10000&mimetype=application/font-woff2' },
@@ -47,24 +85,6 @@ const loaders = [
   { test: /\.eot(\?.*)?$/, loader: 'file-loader?prefix=fonts/&name=[path][name].[ext]' },
   { test: /\.svg(\?.*)?$/, loader: 'url-loader?prefix=fonts/&name=[path][name].[ext]&limit=10000&mimetype=image/svg+xml' },
   { test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192' }
-];
-
-const postcss = [
-  cssnano({
-    autoprefixer: {
-      add: true,
-      remove: true,
-      browsers: ['last 2 versions']
-    },
-    discardComments: {
-      removeAll: true
-    },
-    discardUnused: false,
-    mergeIdents: false,
-    reduceIdents: false,
-    safe: true,
-    sourcemap: true
-  })
 ];
 
 const plugins = [
@@ -76,82 +96,43 @@ const plugins = [
     filename: root('./dist/index.html'),
     title: 'Preact Starter',
     inject: 'body'
+  }),
+  new ScriptExtHtmlWebpackPlugin({
+    module: /\.js$/
   })
 ];
 
 if (__DEV__) {
-  entry.app.unshift(root('./build/dev-client.js'));
+  //entry.app.unshift(root('./build/dev-client.js'));
 
-  loaders.push(
-    {
-      test: /\.css$/,
-      loader: 'style-loader!' + baseCssLoader + '!postcss-loader',
-      exclude: null
-    },
-    {
-      test: /\.less$/,
-      loader: 'style-loader!' + baseCssLoader + '!less-loader!postcss-loader',
-      exclude: null
-    }
-  );
-
-  plugins.push(
-    new webpack.HotModuleReplacementPlugin(),
-    new webpack.NoErrorsPlugin()
-  );
+  /*
+    plugins.push(
+      //new webpack.HotModuleReplacementPlugin(),
+      //new webpack.NoErrorsPlugin()
+    );
+    */
 } else {
-  devtool = 'source-map';
-
   entry.vendor = [
     'preact',
-    'preact-compat/dist/preact-compat.js',
-    'react-router',
     'mobx',
-    'mobx-react'
+    'mobx-preact'
   ];
-
-  loaders.push(
-    {
-      test: /\.css$/,
-      loader: ExtractTextPlugin.extract('style-loader', baseCssLoader + '!postcss-loader'),
-      exclude: null
-    },
-    {
-      test: /\.less$/,
-      loader: ExtractTextPlugin.extract('style-loader', baseCssLoader + '!less-loader!postcss-loader'),
-      exclude: null
-    }
-  );
 
   plugins.push(
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        unused: true,
-        dead_code: true,
-        warnings: false
-      }
-    }),
-    new webpack.optimize.CommonsChunkPlugin({
-      names: ['vendor']
-    }),
-    new ExtractTextPlugin('[name].[contenthash].css', {
-      allChunks: true
-    }),
-    new CopyWebpackPlugin([
-      {from: root('./static'), to: 'static'}
-    ])
+    new MinifyPlugin()
   );
 }
 
-export default {
-  devtool,
+module.exports = {
+  mode: __DEV__ ? 'development' : 'production',
+  devtool: __DEV__ ? 'cheap-module-eval-source-map' : 'source-map',
   entry,
   resolve,
   output,
   module: {
-    loaders
+    rules: loaders
   },
   plugins,
-  postcss
+  target: 'web',
 };
