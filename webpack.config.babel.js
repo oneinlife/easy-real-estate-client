@@ -28,7 +28,21 @@ const resolve = {
 const output = {
   path: root('./dist'),
   filename: '[name].[hash].js',
+  chunkFilename: '[name].[hash].bundle.js',
   publicPath: '/'
+};
+
+const optimization = {
+  splitChunks: {
+    cacheGroups: {
+      vendor: {
+        chunks: 'initial',
+        name: 'vendor',
+        test: /node_modules/,
+        enforce: true
+      },
+    }
+  },
 };
 
 const cssLoaderOptions = DEBUG => ({
@@ -112,11 +126,6 @@ if (__DEV__) {
     );
     */
 } else {
-  entry.vendor = [
-    'preact',
-    'mobx',
-    'mobx-preact'
-  ];
 
   plugins.push(
     new webpack.optimize.OccurrenceOrderPlugin(),
@@ -130,6 +139,7 @@ module.exports = {
   entry,
   resolve,
   output,
+  optimization,
   module: {
     rules: loaders
   },
