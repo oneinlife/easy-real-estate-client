@@ -26,6 +26,7 @@ const resolve = {
     components: path.resolve(__dirname, './src/components'),
     layouts: path.resolve(__dirname, './src/layouts'),
     styles: path.resolve(__dirname, './src/styles'),
+    utils: path.resolve(__dirname, './src/utils'),
   }
 };
 
@@ -101,7 +102,8 @@ const plugins = [
     template: root('./src/index.ejs'),
     filename: root('./dist/index.html'),
     title: 'Preact Starter',
-    inject: 'body'
+    inject: 'head',
+    hash:true,
   }),
   new ScriptExtHtmlWebpackPlugin({
     module: /\.js$/
