@@ -1,18 +1,59 @@
 @import '~styles/variables.scss';
 
+.root {
+  padding: 0 0.5em;
+}
+
 .card {
   background-color: $main-bg;
   border: 1px solid $color-grey;
-  border-radius: 8px;
+  border-radius: 0.5em;
   overflow: hidden;
   margin-bottom: 12px;
 }
 
 .characteristic {
-  padding: 16px;
+  padding: 1em;
 }
 
 .price {
-  font-size: 20px;
+  margin-bottom: 0.75em;
+}
+
+.priceSpan {
+  font-size: 1.5em;
   font-weight: 500;
+}
+
+.squarePice {
+  color: $color-grey2;
+  margin-left: 1em;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.small {
+  font-size: 1em;
+}
+
+.line {
+  margin-bottom: 0.5em;
+}
+
+.dot {
+  color: $color-grey2;
+  margin: 0 0.5em;
+}
+
+.tell {
+  color: $color-blue;
+  font-size: 1.125em;
+  font-weight: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1em 0;
+  border-top: 1px solid $color-grey;
 }
