@@ -83,6 +83,7 @@
     "mobx-preact-devtools": "0.0.19",
     "pixrem": "^5.0.0",
     "postcss-import": "^12.0.1",
+    "postcss-import-alias-resolver": "^0.1.1",
     "postcss-loader": "^3.0.0",
     "postcss-mixins": "^6.2.2",
     "postcss-scss": "^2.0.0",

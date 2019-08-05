@@ -6,12 +6,6 @@ import Header from 'components/Header/Header';
 const getHomeLayout = () => {
   return import(/* webpackChunkName: "HomeLayout" */ 'layouts/HomeLayout').then(m => m.default)
 };
-const getAbout = () => {
-  return import(/* webpackChunkName: "About" */ 'layouts/About').then(m => m.default)
-};
-const getCount = () => {
-  return import(/* webpackChunkName: "Count" */ 'layouts/Count').then(m => m.default)
-};
 
 function App() {
   return (
@@ -19,8 +13,6 @@ function App() {
       <Header />
       <Router>
         <AsyncRoute path='/' getComponent={getHomeLayout}/>
-        <AsyncRoute path='/about' getComponent={getAbout}/>
-        <AsyncRoute path='/count' getComponent={getCount} />
       </Router>
     </div>
   );
