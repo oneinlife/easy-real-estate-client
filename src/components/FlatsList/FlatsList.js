@@ -1,11 +1,19 @@
 import {h, Component} from 'preact';
 import { observer, inject } from 'mobx-preact';
-import s from './FlatsList.scss';
 import { toNumericStringWithDivider } from 'utils/helpers';
+import s from './FlatsList.scss';
 
 @inject('flatsStore')
 @observer
 class FlatsList extends Component {
+
+  componentWillMount() {
+    this.removeCss = s._insertCss();
+  }
+
+  componentWillUnmount() {
+    this.removeCss();
+  }
 
   componentDidMount() {
     this.props.flatsStore.load();
