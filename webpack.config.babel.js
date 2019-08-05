@@ -35,7 +35,8 @@ const output = {
   path: root('./dist'),
   filename: '[name].[hash].js',
   chunkFilename: '[name].[hash].bundle.js',
-  publicPath: '/'
+  publicPath: '/',
+  jsonpScriptType: 'module',
 };
 
 
