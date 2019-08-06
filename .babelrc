@@ -5,7 +5,7 @@
       {
         "loose": true,
         "modules": false,
-        "useBuiltIns": "usage",
+        "useBuiltIns": "entry",
         "corejs": { "version": 3, "proposals": true },
         "targets": {
           "esmodules": true,
