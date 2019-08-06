@@ -36,14 +36,14 @@ class FlatsList extends Component {
                 </span>
               </div>
               <div class={`${s.line} ${s.bold}`}>
-                <span class={s.small}>{flat.rooms}-комн. квартира</span>
+                {flat.rooms}-комн. квартира
                 <span class={s.dot}>•</span>
-                <span class={s.small}>{flat.square} м<sup>2</sup></span>
+                {flat.square} м<sup>2</sup>
                 <span class={s.dot}>•</span>
-                <span class={s.small}>{flat.floor} этаж</span>
+                {flat.floor} этаж
               </div>
-              <div class={s.line}><span class={s.small}>ул. {flat.street}</span></div>
-              <div class={s.line}><span class={s.small}>{flat.district}</span></div>
+              <div class={s.line}>ул. {flat.street}</div>
+              <div class={s.line}>{flat.district}</div>
             </div>
             <div class={s.tell}>Позвонить</div>
           </div>

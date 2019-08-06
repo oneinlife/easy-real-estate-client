@@ -126,11 +126,6 @@ if (__DEV__) {
     );
     */
 } else {
-
-  plugins.push(
-    new BundleAnalyzerPlugin()
-  );
-
   plugins.push(
     new webpack.optimize.OccurrenceOrderPlugin(),
     //new MinifyPlugin()
