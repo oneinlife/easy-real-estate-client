@@ -1,11 +1,10 @@
 const path = require('path');
-const cssnano = require('cssnano');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
-const MinifyPlugin = require("babel-minify-webpack-plugin");
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const resolver = require('postcss-import-alias-resolver');
+const TerserPlugin = require('terser-webpack-plugin');
 
 
 const __DEV__ = process.env.NODE_ENV === 'development';
@@ -28,6 +27,7 @@ const resolve = {
     layouts: path.resolve(__dirname, './src/layouts'),
     styles: path.resolve(__dirname, './src/styles'),
     utils: path.resolve(__dirname, './src/utils'),
+    mobx: path.resolve(__dirname, './node_modules/mobx/lib/mobx.es6.js'),
   }
 };
 
@@ -71,8 +71,6 @@ const loaders = [
     loader: 'babel-loader',
     // include: [path.resolve(__dirname, '../src')],
     exclude: [
-      /core-js/,
-      /regenerator-runtime/,
     ],
   },
   {
@@ -130,8 +128,12 @@ if (__DEV__) {
 } else {
 
   plugins.push(
+    new BundleAnalyzerPlugin()
+  );
+
+  plugins.push(
     new webpack.optimize.OccurrenceOrderPlugin(),
-    new MinifyPlugin()
+    //new MinifyPlugin()
   );
 }
 
@@ -140,6 +142,9 @@ module.exports = {
   devtool: __DEV__ ? 'cheap-module-eval-source-map' : 'source-map',
   entry,
   resolve,
+  optimization: {
+    minimizer: [new TerserPlugin()]
+  },
   output,
   module: {
     rules: loaders
