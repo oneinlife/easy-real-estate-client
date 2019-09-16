@@ -1,9 +1,10 @@
-const path = require('path');
-const express = require('express');
-const webpack = require('webpack');
-const config = require('../config');
+import path from 'path';
+import express from 'express';
+import webpack from 'webpack';
+import config from '../config';
 // var proxyMiddleware = require('http-proxy-middleware');
-const webpackConfig = require('../webpack.config.babel');
+import webpackConfig from '../webpack.config.babel';
+import HTML from './layouts/HTML';
 
 // default port where dev server listens for incoming traffic
 const port = process.env.PORT || config.dev.port || 8080;
@@ -12,8 +13,9 @@ const port = process.env.PORT || config.dev.port || 8080;
 // var proxyTable = config.dev.proxyTable;
 
 const app = express();
-const compiler = webpack(webpackConfig);
+//const compiler = webpack(webpackConfig);
 
+/*
 const devMiddleware = require('webpack-dev-middleware')(compiler, {
   publicPath: webpackConfig.output.publicPath,
   stats: {
@@ -23,7 +25,7 @@ const devMiddleware = require('webpack-dev-middleware')(compiler, {
 });
 
 const hotMiddleware = require('webpack-hot-middleware')(compiler);
-
+*/
 // proxy api requests
 // Object.keys(proxyTable).forEach(function (context) {
 //   var options = proxyTable[context];
@@ -34,20 +36,25 @@ const hotMiddleware = require('webpack-hot-middleware')(compiler);
 // });
 
 // handle fallback for HTML5 history API
-app.use(require('connect-history-api-fallback')());
+//app.use(require('connect-history-api-fallback')());
 
 // serve webpack bundle output
-app.use(devMiddleware);
+//app.use(devMiddleware);
 
 // enable hot-reload and state-preserving
 // compilation error display
-app.use(hotMiddleware);
+//app.use(hotMiddleware);
 
 // serve pure static assets
 const staticPath = path.posix.join('/', 'static');
 app.use('/static', express.static('static'));
 
-module.exports = app.listen(port, function (err) {
+app.get('*', (req, res) => {
+  console.log(HTML)
+  res.send(HTML)
+})
+
+export default app.listen(port, function (err) {
   if (err) {
     console.log(err);
     return;

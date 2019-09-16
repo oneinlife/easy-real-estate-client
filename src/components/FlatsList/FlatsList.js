@@ -1,6 +1,6 @@
 import {h, Component} from 'preact';
 import { observer, inject } from 'mobx-preact';
-import { toNumericStringWithDivider } from 'utils/helpers';
+import { toNumericStringWithDivider } from '../../utils/helpers';
 import s from './FlatsList.scss';
 
 @inject('flatsStore')

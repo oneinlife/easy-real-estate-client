@@ -1,13 +1,13 @@
 import { h } from 'preact';
 import { Router } from 'preact-router';
 import AsyncRoute from 'preact-async-route';
-import Header from 'components/Header/Header';
+import Header from './components/Header/Header';
 
 const routes = [
   {
     path: '/',
     getComponent: () => {
-      return import(/* webpackChunkName: "HomeLayout" */ 'layouts/HomeLayout').then(m => m.default)
+      return import(/* webpackChunkName: "HomeLayout" */ './layouts/HomeLayout').then(m => m.default)
     }
   }
 ]

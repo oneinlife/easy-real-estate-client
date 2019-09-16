@@ -8,7 +8,15 @@
     "build": "better-npm-run build",
     "build:dev": "better-npm-run build:dev",
     "start": "better-npm-run start",
-    "prod": "better-npm-run prod"
+    "prod": "better-npm-run prod",
+    "postinstall": "link-module-alias"
+  },
+  "_moduleAliases": {
+    "components": "./src/components",
+    "layouts": "./src/layouts",
+    "styles": "./src/styles",
+    "utils": "./src/utils",
+    "mobx": "./node_modules/mobx/lib/mobx.es6.js"
   },
   "betterScripts": {
     "build": {
@@ -24,7 +32,7 @@
       }
     },
     "start": {
-      "command": "babel-node build/dev-server.js",
+      "command": "babel-node dist/server.js ",
       "env": {
         "NODE_ENV": "development"
       }
@@ -58,6 +66,7 @@
     "@babel/plugin-syntax-dynamic-import": "^7.2.0",
     "@babel/plugin-transform-react-jsx": "^7.3.0",
     "@babel/preset-env": "^7.5.5",
+    "assets-webpack-plugin": "^3.9.10",
     "autoprefixer": "^9.6.1",
     "babel-eslint": "^10.0.2",
     "babel-loader": "^8.0.6",
@@ -78,6 +87,7 @@
     "html-webpack-plugin": "^3.2.0",
     "isomorphic-style-loader": "^5.1.0",
     "json-loader": "^0.5.7",
+    "link-module-alias": "^1.2.0",
     "mobx-preact-devtools": "0.0.19",
     "pixrem": "^5.0.0",
     "postcss-import": "^12.0.1",
@@ -86,6 +96,7 @@
     "postcss-mixins": "^6.2.2",
     "postcss-scss": "^2.0.0",
     "preact-async-route": "^2.2.1",
+    "preact-render-to-string": "^4.1.0",
     "precss": "^4.0.0",
     "rimraf": "^2.6.3",
     "script-ext-html-webpack-plugin": "^2.1.4",
