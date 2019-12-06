@@ -1,26 +1,32 @@
-import {h, render} from 'preact';
+import { h, render } from 'preact';
 import App from './App';
 import store from './store';
-import { Provider } from 'mobx-preact';
+import { Provider } from 'mobx-react';
+import StyleContext from 'isomorphic-style-loader/StyleContext'
 import DevTools from 'mobx-preact-devtools';
 
 if (__DEV__) {
-  /*require('preact/devtools');
-
-  const devToolsRoot = document.createElement('div');
-  devToolsRoot.id = 'devtools';
-  document.body.appendChild(devToolsRoot);
-  render(<DevTools />, devToolsRoot);*/
+  /*  require('preact/devtools');
+  
+    const devToolsRoot = document.createElement('div');
+    devToolsRoot.id = 'devtools';
+    document.body.appendChild(devToolsRoot);
+    render(<DevTools />, devToolsRoot);
+    */
+}
+const insertCss = (...styles) => {
+  const removeCss = styles.map(style => style._insertCss())
+  return () => removeCss.forEach(dispose => dispose())
 }
 
-let root = null;
-
-function bootstrap (App) {
-  root = render((
+function bootstrap(App) {
+  render((
     <Provider {...store}>
-      <App />
-    </Provider>
-  ), document.getElementById('root'), root);
+      <StyleContext.Provider value={{ insertCss }}>
+        <App />
+      </StyleContext.Provider>
+    </Provider >
+  ), document.getElementById('root'));
 }
 
 bootstrap(App);

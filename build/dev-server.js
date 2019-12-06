@@ -1,6 +1,7 @@
 const path = require('path');
 const express = require('express');
 const webpack = require('webpack');
+const expressStaticGzip = require('express-static-gzip');
 const config = require('../config');
 // var proxyMiddleware = require('http-proxy-middleware');
 const webpackConfig = require('../webpack.config.babel');
@@ -12,6 +13,7 @@ const port = process.env.PORT || config.dev.port || 8080;
 // var proxyTable = config.dev.proxyTable;
 
 const app = express();
+/*
 const compiler = webpack(webpackConfig);
 
 const devMiddleware = require('webpack-dev-middleware')(compiler, {
@@ -23,7 +25,7 @@ const devMiddleware = require('webpack-dev-middleware')(compiler, {
 });
 
 const hotMiddleware = require('webpack-hot-middleware')(compiler);
-
+*/
 // proxy api requests
 // Object.keys(proxyTable).forEach(function (context) {
 //   var options = proxyTable[context];
@@ -33,15 +35,23 @@ const hotMiddleware = require('webpack-hot-middleware')(compiler);
 //   app.use(proxyMiddleware(context, options));
 // });
 
+app.use('/', expressStaticGzip('dist', {
+  enableBrotli: true,
+  orderPreference: ['br', 'gz'],
+  setHeaders: function (res, path) {
+     res.setHeader("Cache-Control", "public, max-age=31536000");
+  }
+}));
+
 // handle fallback for HTML5 history API
 app.use(require('connect-history-api-fallback')());
 
 // serve webpack bundle output
-app.use(devMiddleware);
+//app.use(devMiddleware);
 
 // enable hot-reload and state-preserving
 // compilation error display
-app.use(hotMiddleware);
+// app.use(hotMiddleware);
 
 // serve pure static assets
 const staticPath = path.posix.join('/', 'static');

@@ -13,11 +13,10 @@ class Header extends Component {
 
   render() {
     return (
-      <div class={s.root} >
-        <span class={s.title}>Воздух Недвижимость</span>
-        <div>
-          <span>Поиск</span>
-        </div>
+      <div class={s.root}>
+        <span>filter</span>
+        <span>select</span>
+        <span>chats</span>
       </div>
     );
   }

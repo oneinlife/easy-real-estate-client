@@ -5,8 +5,8 @@
 }
 
 .card {
-  background-color: $main-bg;
-  border: 1px solid $color-grey;
+  background-color: $white;
+  border: 1px solid $text-secondary;
   border-radius: 0.5rem;
   overflow: hidden;
   margin-bottom: 12px;
@@ -26,7 +26,7 @@
 }
 
 .squarePice {
-  color: $color-grey2;
+  color: $text-tetrary;
   margin-left: 1rem;
 }
 
@@ -40,17 +40,17 @@
 }
 
 .dot {
-  color: $color-grey2;
+  color: $text-secondary;
   margin: 0 0.5rem;
 }
 
 .tell {
-  color: $color-blue;
+  color: $brand-blue;
   font-size: 1.125rem;
   font-weight: 500;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 1rem 0;
-  border-top: 1px solid $color-grey;
+  border-top: 1px solid $text-secondary;
 }

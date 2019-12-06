@@ -5,12 +5,11 @@ const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 const resolver = require('postcss-import-alias-resolver');
 const TerserPlugin = require('terser-webpack-plugin');
+const CompressionPlugin = require('compression-webpack-plugin');
+const BrotliPlugin = require('brotli-webpack-plugin');
 
 
 const __DEV__ = process.env.NODE_ENV === 'development';
-
-
-
 const root = (_path = '.') => path.join(__dirname, _path);
 
 const entry = [
@@ -27,6 +26,9 @@ const resolve = {
     layouts: path.resolve(__dirname, './src/layouts'),
     styles: path.resolve(__dirname, './src/styles'),
     utils: path.resolve(__dirname, './src/utils'),
+    'react': 'preact/compat',
+    'react-dom/test-utils': 'preact/test-utils',
+    'react-dom': 'preact/compat',
     mobx: path.resolve(__dirname, './node_modules/mobx/lib/mobx.es6.js'),
   }
 };
@@ -52,9 +54,11 @@ const postCssLoaderOptions = {
   parser: 'postcss-scss',
   modules: true,
   plugins: () => [
-    require('postcss-import')({resolve: resolver({
-      alias: { styles: path.resolve(__dirname, 'src/styles')}
-    })}),
+    require('postcss-import')({
+      resolve: resolver({
+        alias: { styles: path.resolve(__dirname, 'src/styles') }
+      })
+    }),
     require('precss')(),
     // Generate pixel fallback for "rem" units, e.g. div { margin: 2.5rem 2px 3em 100%; }
     // https://github.com/robwierzbowski/node-pixrem
@@ -70,8 +74,7 @@ const loaders = [
     test: /\.m?jsx?$/,
     loader: 'babel-loader',
     // include: [path.resolve(__dirname, '../src')],
-    exclude: [
-    ],
+    exclude: [],
   },
   {
     test: /\.scss$/,
@@ -105,11 +108,20 @@ const plugins = [
     filename: root('./dist/index.html'),
     title: 'Preact Starter',
     inject: 'head',
-    hash:true,
+    hash: true,
   }),
   new ScriptExtHtmlWebpackPlugin({
     module: /\.js$/
-  })
+  }),
+  new CompressionPlugin({
+    filename: '[path].gz[query]',
+    algorithm: 'gzip',
+    test: /\.js$|\.css$|\.html$/,
+  }),
+  new BrotliPlugin({
+    filename: '[path].br[query]',
+    test: /\.js$|\.css$|\.html$/,
+  }),
 ];
 
 if (__DEV__) {
@@ -134,11 +146,16 @@ if (__DEV__) {
 
 module.exports = {
   mode: __DEV__ ? 'development' : 'production',
-  devtool: __DEV__ ? 'cheap-module-eval-source-map' : 'source-map',
+  devtool: __DEV__ ? 'cheap-module-eval-source-map' : 'hidden-source-map',
   entry,
   resolve,
   optimization: {
-    minimizer: [new TerserPlugin()]
+    minimizer: [new TerserPlugin({
+      extractComments: 'all',
+      terserOptions: {
+        ecma: 6,
+      },
+    })]
   },
   output,
   module: {
